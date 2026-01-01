@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { CircularProgress } from '@/components/ui/circular-progress';
 import { TestimonialsSlider } from '@/components/testimonials-slider';
 import { BlogSlider } from '@/components/blog-slider';
+import { ContactForm } from '@/components/contact-form';
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
@@ -609,9 +610,9 @@ export default function Home() {
             variants={fadeInUp}
             className="bg-blue-600 text-white p-8 md:p-12 lg:p-16 flex flex-col justify-center relative"
           >
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
-                Über 10.000 zufriedene Kunden vertrauen uns
-              </h2>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
+              Über 10.000 zufriedene Kunden vertrauen uns
+            </h2>
             <div className="relative mt-8 aspect-4/3 rounded-lg overflow-hidden">
               <Image
                 src="https://images.pexels.com/photos/842961/pexels-photo-842961.jpeg"
@@ -841,6 +842,7 @@ export default function Home() {
           <BlogSlider />
         </motion.section>
 
+
         <section id="contact">
           <h2 className="text-2xl font-semibold">Contact & Support</h2>
           <p className="mt-2 text-zinc-600">
@@ -853,15 +855,10 @@ export default function Home() {
               </CardHeader>
               <CardContent>
                 <ul className="list-disc space-y-2 pl-6">
-                  <li>E-Mail-Support für detaillierte Fragen</li>
+                  <li>E-Mail: Kontakt@topdocz.de</li>
                   <li>Schnelle Antworten und praktische Schritte</li>
                   <li>Links zu offiziellen Ressourcen</li>
                 </ul>
-                <div className="mt-4">
-                  <Link href="/#contact">
-                    <Button variant="outline">Kontakt</Button>
-                  </Link>
-                </div>
               </CardContent>
             </Card>
             <Card>
@@ -880,6 +877,9 @@ export default function Home() {
                 </ul>
               </CardContent>
             </Card>
+          </div>
+          <div className="mt-8">
+            <ContactForm />
           </div>
         </section>
 
