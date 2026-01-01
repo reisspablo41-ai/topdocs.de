@@ -23,7 +23,7 @@ const staggerContainer = {
 
 export default function Page() {
   const [submitted, setSubmitted] = useState(false);
-  
+
   return (
     <main className="mx-auto max-w-6xl px-4 py-12 space-y-16">
       {/* Hero Section */}
@@ -37,13 +37,13 @@ export default function Page() {
           Get in Touch with Us
         </h1>
         <p className="text-lg md:text-xl text-zinc-800">
-          We&apos;re here to help you every step of the way. Whether you have questions about our services, 
-          need guidance on documentation requirements, or want to place an order, our professional team is 
-          ready to assist you 24/7. Experience the reliability, speed, and professionalism that thousands of 
+          We&apos;re here to help you every step of the way. Whether you have questions about our services,
+          need guidance on documentation requirements, or want to place an order, our professional team is
+          ready to assist you 24/7. Experience the reliability, speed, and professionalism that thousands of
           satisfied customers trust.
         </p>
         <p className="text-base md:text-lg text-zinc-700">
-          Your inquiry matters to us. We respond to all messages within 24–48 hours, ensuring you receive 
+          Your inquiry matters to us. We respond to all messages within 24–48 hours, ensuring you receive
           the support and information you need to move forward with confidence.
         </p>
       </motion.section>
@@ -59,7 +59,7 @@ export default function Page() {
         <motion.div variants={fadeInUp}>
           <h2 className="text-3xl md:text-4xl font-semibold mb-6 text-center">Contact Methods</h2>
           <p className="text-lg text-zinc-800">
-            Choose the communication method that works best for you. All channels are secure, confidential, 
+            Choose the communication method that works best for you. All channels are secure, confidential,
             and monitored by our expert team around the clock.
           </p>
         </motion.div>
@@ -72,15 +72,15 @@ export default function Page() {
               </CardHeader>
               <CardContent>
                 <p className="mb-4">
-                  Speak directly with our support team via phone or WhatsApp for immediate assistance. 
-                  Our multilingual team is available 24/7 to answer your questions and guide you through 
+                  Speak directly with our support team via phone or WhatsApp for immediate assistance.
+                  Our multilingual team is available 24/7 to answer your questions and guide you through
                   the process.
                 </p>
                 <div className="space-y-2">
                   <div>
                     <p className="font-semibold text-zinc-900">Phone:</p>
-                    <a 
-                      href="tel:+447404846207" 
+                    <a
+                      href="tel:+447404846207"
                       className="text-blue-600"
                     >
                       +44 740 484 6207
@@ -88,9 +88,9 @@ export default function Page() {
                   </div>
                   <div>
                     <p className="font-semibold text-zinc-900">WhatsApp:</p>
-                    <a 
-                      href="https://wa.me/447824028860" 
-                      target="_blank" 
+                    <a
+                      href="https://wa.me/447824028860"
+                      target="_blank"
                       rel="noopener noreferrer"
                       className="text-blue-600"
                     >
@@ -112,14 +112,14 @@ export default function Page() {
               </CardHeader>
               <CardContent>
                 <p className="mb-4">
-                  Send us a detailed message via email for comprehensive responses to complex inquiries. 
-                  Our team reviews every email carefully and provides thorough, professional guidance 
+                  Send us a detailed message via email for comprehensive responses to complex inquiries.
+                  Our team reviews every email carefully and provides thorough, professional guidance
                   tailored to your specific needs.
                 </p>
                 <div>
                   <p className="font-semibold text-zinc-900">Email Address:</p>
-                  <a 
-                    href="mailto:info@onlinelegitdocuments.com" 
+                  <a
+                    href="mailto:info@onlinelegitdocuments.com"
                     className="text-blue-600"
                   >
                     info@onlinelegitdocuments.com
@@ -139,8 +139,8 @@ export default function Page() {
               </CardHeader>
               <CardContent>
                 <p className="mb-4">
-                  Get instant answers to your questions through our secure live chat system. Available 
-                  24/7, our chat support provides real-time assistance for quick queries and immediate 
+                  Get instant answers to your questions through our secure live chat system. Available
+                  24/7, our chat support provides real-time assistance for quick queries and immediate
                   guidance on our services.
                 </p>
                 <div className="mt-4">
@@ -168,7 +168,7 @@ export default function Page() {
         <motion.div variants={fadeInUp} className="text-center">
           <h2 className="text-3xl md:text-4xl font-semibold mb-4">Send Us a Message</h2>
           <p className="text-lg text-zinc-800">
-            Fill out the form below and our team will get back to you promptly. All information you 
+            Fill out the form below and our team will get back to you promptly. All information you
             provide is kept strictly confidential and secure.
           </p>
         </motion.div>
@@ -178,9 +178,46 @@ export default function Page() {
             <CardContent className="pt-6">
               <form
                 className="space-y-6"
-                onSubmit={(e) => {
+                onSubmit={async (e) => {
                   e.preventDefault();
-                  setSubmitted(true);
+                  setSubmitted(false);
+
+                  const formData = new FormData(e.currentTarget);
+                  const data = {
+                    name: formData.get('name'),
+                    email: formData.get('email'),
+                    phone: formData.get('phone'),
+                    subject: formData.get('subject'),
+                    service: formData.get('service'),
+                    message: formData.get('message'),
+                  };
+
+                  const submitBtn = e.currentTarget.querySelector('button[type="submit"]') as HTMLButtonElement;
+                  const originalText = submitBtn.innerText;
+                  submitBtn.disabled = true;
+                  submitBtn.innerText = 'Sending...';
+
+                  try {
+                    const response = await fetch('/api/contact', {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify(data),
+                    });
+
+                    if (response.ok) {
+                      setSubmitted(true);
+                      (e.target as HTMLFormElement).reset();
+                    } else {
+                      alert('Something went wrong. Please try again.');
+                    }
+                  } catch (error) {
+                    alert('Error sending message. Please try again.');
+                  } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = originalText;
+                  }
                 }}
               >
                 <div className="grid gap-6 md:grid-cols-2">
@@ -188,10 +225,10 @@ export default function Page() {
                     <Label htmlFor="name" className="text-zinc-900">
                       Full Name <span className="text-red-500">*</span>
                     </Label>
-                    <Input 
-                      id="name" 
-                      name="name" 
-                      required 
+                    <Input
+                      id="name"
+                      name="name"
+                      required
                       placeholder="Enter your full name"
                       className="mt-2"
                     />
@@ -203,11 +240,11 @@ export default function Page() {
                     <Label htmlFor="email" className="text-zinc-900">
                       Email Address <span className="text-red-500">*</span>
                     </Label>
-                    <Input 
-                      id="email" 
-                      name="email" 
-                      type="email" 
-                      required 
+                    <Input
+                      id="email"
+                      name="email"
+                      type="email"
+                      required
                       placeholder="your.email@example.com"
                       className="mt-2"
                     />
@@ -222,10 +259,10 @@ export default function Page() {
                     <Label htmlFor="phone" className="text-zinc-900">
                       Phone Number (Optional)
                     </Label>
-                    <Input 
-                      id="phone" 
-                      name="phone" 
-                      type="tel" 
+                    <Input
+                      id="phone"
+                      name="phone"
+                      type="tel"
                       placeholder="+1 (555) 123-4567"
                       className="mt-2"
                     />
@@ -237,10 +274,10 @@ export default function Page() {
                     <Label htmlFor="subject" className="text-zinc-900">
                       Subject <span className="text-red-500">*</span>
                     </Label>
-                    <Input 
-                      id="subject" 
-                      name="subject" 
-                      required 
+                    <Input
+                      id="subject"
+                      name="subject"
+                      required
                       placeholder="What is your inquiry about?"
                       className="mt-2"
                     />
@@ -254,9 +291,9 @@ export default function Page() {
                   <Label htmlFor="service" className="text-zinc-900">
                     Service of Interest (Optional)
                   </Label>
-                  <Input 
-                    id="service" 
-                    name="service" 
+                  <Input
+                    id="service"
+                    name="service"
                     placeholder="e.g., Passport, Driver's License, ID Card, Residence Permit"
                     className="mt-2"
                   />
@@ -269,10 +306,10 @@ export default function Page() {
                   <Label htmlFor="message" className="text-zinc-900">
                     Your Message <span className="text-red-500">*</span>
                   </Label>
-                  <Textarea 
-                    id="message" 
-                    name="message" 
-                    required 
+                  <Textarea
+                    id="message"
+                    name="message"
+                    required
                     placeholder="Please provide details about your inquiry, questions, or how we can assist you. Be as specific as possible so we can provide the most helpful response."
                     className="mt-2 min-h-[150px]"
                   />
@@ -282,15 +319,15 @@ export default function Page() {
                 </div>
 
                 <div className="flex items-start gap-2">
-                  <input 
-                    type="checkbox" 
-                    id="privacy" 
-                    name="privacy" 
+                  <input
+                    type="checkbox"
+                    id="privacy"
+                    name="privacy"
                     required
                     className="mt-1"
                   />
                   <Label htmlFor="privacy" className="text-sm text-zinc-800">
-                    I agree to the privacy policy and understand that my information will be kept confidential 
+                    I agree to the privacy policy and understand that my information will be kept confidential
                     and used solely for responding to my inquiry. <span className="text-red-500">*</span>
                   </Label>
                 </div>
@@ -309,7 +346,7 @@ export default function Page() {
                       ✓ Message Sent Successfully!
                     </p>
                     <p className="text-sm text-blue-800">
-                      Thank you for contacting us. We&apos;ve received your message and will respond within 
+                      Thank you for contacting us. We&apos;ve received your message and will respond within
                       24–48 hours. For urgent matters, please call or use WhatsApp for immediate assistance.
                     </p>
                   </motion.div>
@@ -331,7 +368,7 @@ export default function Page() {
         <motion.div variants={fadeInUp} className="text-center">
           <h2 className="text-3xl md:text-4xl font-semibold mb-4">Why Contact Us?</h2>
           <p className="text-lg text-zinc-800">
-            Our team is dedicated to providing exceptional service and support. Here&apos;s what you can 
+            Our team is dedicated to providing exceptional service and support. Here&apos;s what you can
             expect when you reach out to us.
           </p>
         </motion.div>
@@ -344,8 +381,8 @@ export default function Page() {
               </CardHeader>
               <CardContent>
                 <p>
-                  We understand that time is valuable. Our team is committed to responding to all inquiries 
-                  within 24–48 hours, with many responses sent even sooner. For urgent matters, our phone 
+                  We understand that time is valuable. Our team is committed to responding to all inquiries
+                  within 24–48 hours, with many responses sent even sooner. For urgent matters, our phone
                   and WhatsApp lines provide immediate assistance.
                 </p>
               </CardContent>
@@ -359,8 +396,8 @@ export default function Page() {
               </CardHeader>
               <CardContent>
                 <p>
-                  With over three decades of experience, our team provides professional, accurate guidance 
-                  tailored to your specific needs. We help you understand requirements, navigate processes, 
+                  With over three decades of experience, our team provides professional, accurate guidance
+                  tailored to your specific needs. We help you understand requirements, navigate processes,
                   and make informed decisions.
                 </p>
               </CardContent>
@@ -374,8 +411,8 @@ export default function Page() {
               </CardHeader>
               <CardContent>
                 <p>
-                  Your privacy is our priority. All communications are encrypted and confidential. We follow 
-                  strict data protection protocols and never share your information with third parties 
+                  Your privacy is our priority. All communications are encrypted and confidential. We follow
+                  strict data protection protocols and never share your information with third parties
                   without your explicit consent.
                 </p>
               </CardContent>
@@ -389,7 +426,7 @@ export default function Page() {
               </CardHeader>
               <CardContent>
                 <p>
-                  Our support team is available around the clock, seven days a week. No matter your time 
+                  Our support team is available around the clock, seven days a week. No matter your time
                   zone or schedule, we&apos;re here to help whenever you need us.
                 </p>
               </CardContent>
@@ -403,7 +440,7 @@ export default function Page() {
               </CardHeader>
               <CardContent>
                 <p>
-                  Every inquiry is handled with professionalism and care. We take your questions seriously 
+                  Every inquiry is handled with professionalism and care. We take your questions seriously
                   and provide detailed, helpful responses that address your specific needs and concerns.
                 </p>
               </CardContent>
@@ -417,7 +454,7 @@ export default function Page() {
               </CardHeader>
               <CardContent>
                 <p>
-                  From initial inquiries to order placement and follow-up questions, we provide end-to-end 
+                  From initial inquiries to order placement and follow-up questions, we provide end-to-end
                   support throughout your entire journey. Our goal is your complete satisfaction.
                 </p>
               </CardContent>
@@ -441,28 +478,28 @@ export default function Page() {
             </h2>
             <div className="space-y-4 text-zinc-800">
               <p>
-                <strong>Confidentiality Guaranteed:</strong> All information you share with us is treated 
-                with the utmost confidentiality. We understand the sensitive nature of document services 
+                <strong>Confidentiality Guaranteed:</strong> All information you share with us is treated
+                with the utmost confidentiality. We understand the sensitive nature of document services
                 and take every precaution to protect your personal information.
               </p>
               <p>
-                <strong>Secure Communication:</strong> All our communication channels, including email, 
-                phone, and online forms, use industry-standard encryption to ensure your data remains 
+                <strong>Secure Communication:</strong> All our communication channels, including email,
+                phone, and online forms, use industry-standard encryption to ensure your data remains
                 secure during transmission.
               </p>
               <p>
-                <strong>Data Protection:</strong> We follow strict data protection protocols and comply 
-                with international privacy standards. Your information is stored securely and accessed 
+                <strong>Data Protection:</strong> We follow strict data protection protocols and comply
+                with international privacy standards. Your information is stored securely and accessed
                 only by authorized personnel who need it to assist you.
               </p>
               <p>
-                <strong>No Third-Party Sharing:</strong> We never sell, rent, or share your personal 
-                information with third parties without your explicit consent. Your data is used solely 
+                <strong>No Third-Party Sharing:</strong> We never sell, rent, or share your personal
+                information with third parties without your explicit consent. Your data is used solely
                 to provide you with the services and support you request.
               </p>
               <p>
-                <strong>Right to Privacy:</strong> You have the right to request access to, correction 
-                of, or deletion of your personal information at any time. Simply contact us, and we&apos;ll 
+                <strong>Right to Privacy:</strong> You have the right to request access to, correction
+                of, or deletion of your personal information at any time. Simply contact us, and we&apos;ll
                 promptly address your request.
               </p>
             </div>
@@ -483,8 +520,8 @@ export default function Page() {
             Ready to Get Started?
           </h2>
           <p className="text-lg text-zinc-800">
-            Don&apos;t hesitate to reach out. Whether you have a quick question or need comprehensive 
-            guidance, we&apos;re here to help. Contact us today and experience the professional, reliable 
+            Don&apos;t hesitate to reach out. Whether you have a quick question or need comprehensive
+            guidance, we&apos;re here to help. Contact us today and experience the professional, reliable
             service that sets us apart.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
@@ -538,8 +575,8 @@ export default function Page() {
               </CardHeader>
               <CardContent>
                 <p>
-                  We aim to respond to all inquiries within 24–48 hours. Email inquiries typically receive 
-                  responses within 24 hours, while phone and WhatsApp messages are answered immediately 
+                  We aim to respond to all inquiries within 24–48 hours. Email inquiries typically receive
+                  responses within 24 hours, while phone and WhatsApp messages are answered immediately
                   during business hours or within 2 hours otherwise.
                 </p>
               </CardContent>
@@ -553,8 +590,8 @@ export default function Page() {
               </CardHeader>
               <CardContent>
                 <p>
-                  Please include your name, contact information, the service you&apos;re interested in, 
-                  and a detailed description of your question or request. The more information you provide, 
+                  Please include your name, contact information, the service you&apos;re interested in,
+                  and a detailed description of your question or request. The more information you provide,
                   the better we can assist you.
                 </p>
               </CardContent>
@@ -568,8 +605,8 @@ export default function Page() {
               </CardHeader>
               <CardContent>
                 <p>
-                  Absolutely. We use industry-standard encryption for all communications and follow strict 
-                  data protection protocols. Your information is kept confidential and never shared with 
+                  Absolutely. We use industry-standard encryption for all communications and follow strict
+                  data protection protocols. Your information is kept confidential and never shared with
                   third parties.
                 </p>
               </CardContent>
@@ -583,8 +620,8 @@ export default function Page() {
               </CardHeader>
               <CardContent>
                 <p>
-                  Yes, you can contact us about any aspect of your order, including status updates, 
-                  modifications, or questions. Please include your order reference number for faster 
+                  Yes, you can contact us about any aspect of your order, including status updates,
+                  modifications, or questions. Please include your order reference number for faster
                   assistance.
                 </p>
               </CardContent>
@@ -598,8 +635,8 @@ export default function Page() {
               </CardHeader>
               <CardContent>
                 <p>
-                  Yes, our multilingual support team can assist you in several languages. Please specify 
-                  your preferred language when contacting us, and we&apos;ll ensure you&apos;re connected 
+                  Yes, our multilingual support team can assist you in several languages. Please specify
+                  your preferred language when contacting us, and we&apos;ll ensure you&apos;re connected
                   with a team member who can assist you effectively.
                 </p>
               </CardContent>
@@ -613,8 +650,8 @@ export default function Page() {
               </CardHeader>
               <CardContent>
                 <p>
-                  For urgent matters, we recommend using our phone or WhatsApp lines for immediate 
-                  assistance. These channels are monitored 24/7 and provide the fastest response times 
+                  For urgent matters, we recommend using our phone or WhatsApp lines for immediate
+                  assistance. These channels are monitored 24/7 and provide the fastest response times
                   for time-sensitive inquiries.
                 </p>
               </CardContent>
